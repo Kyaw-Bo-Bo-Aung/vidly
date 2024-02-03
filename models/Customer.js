@@ -19,7 +19,7 @@ const customerSchema = mongoose.Schema({
     }
 });
 
-const Customer = mongoose.model('customer', customerSchema);
+const Customer = mongoose.model('Customer', customerSchema);
 
 function validateInputFields(body) {
     const schema = Joi.object({

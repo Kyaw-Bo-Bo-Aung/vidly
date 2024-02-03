@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('./../middleware/auth');
+const isAdmin = require('./../middleware/isAdmin');
 const { Customer, validate } = require('./../models/Customer');
 
 router.get('/', async (req, res) => {
@@ -7,7 +9,7 @@ router.get('/', async (req, res) => {
     res.send(results);
 })
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     const error = validate(req.body);
     if(error)
         return res.status(400).send(error);
@@ -25,7 +27,7 @@ router.post('/', async (req, res) => {
     } 
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     try {
         const customer = await Customer.findById(req.params.id);
         if(!customer) return res.status(404).send('Customer was not found.');
@@ -45,7 +47,7 @@ router.put('/:id', async (req, res) => {
     }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, isAdmin, async (req, res) => {
     try{  
         const deletedCount = await Customer.deleteOne({_id: req.params.id})
         res.send(deletedCount);
@@ -54,7 +56,7 @@ router.delete('/:id', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
     try {
         const customer = await Customer.findById(req.params.id);
         if(!customer) return res.status(404).send('Customer was not found.');

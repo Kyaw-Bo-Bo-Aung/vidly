@@ -9,7 +9,7 @@ const genreSchema = mongoose.Schema({
         maxlength: 50 
     } 
 });
-const Genre = mongoose.model('genre', genreSchema);
+const Genre = mongoose.model('Genre', genreSchema);
 
 function validateGenreName(body) {
     const schema = Joi.object({

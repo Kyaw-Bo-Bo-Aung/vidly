@@ -1,16 +1,18 @@
 const { Movie } = require('../models/Movie');
 const { Customer } = require('../models/Customer');
 const { Rental, validate } = require('../models/Rental');
+const auth = require('./../middleware/auth');
+const isAdmin = require('./../middleware/isAdmin')
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', auth, isAdmin, async (req, res) => {
     const results = await Rental.find();
     res.send(results);
 })
 
-router.post('/', async (req, res) => {
+router.post('/', auth, isAdmin, async (req, res) => {
     const error = validate(req.body);
     if(error) return res.status(400).send(error);
 
@@ -119,7 +121,7 @@ router.post('/', async (req, res) => {
 //     }
 // })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, isAdmin, async (req, res) => {
     try {
         const rental = await Rental.findById(req.params.id);
         if(!rental) return res.status(404).send('Rental was not found.');
