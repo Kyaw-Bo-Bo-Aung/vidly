@@ -1,3 +1,4 @@
+require('dotenv').config();
 const genres = require('./routes/genres');
 const customers = require('./routes/customers');
 const movies = require('./routes/movies');
@@ -9,13 +10,26 @@ const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 const mongoose = require('mongoose');
 const express = require('express');
+const winston = require('winston');
 const app = express();
 require('express-async-errors');
-require('dotenv').config()
+
+winston.exceptions.handle(
+    new winston.transports.File({ filename: 'log/exceptions.log' }),
+    new winston.transports.Console()
+);
+
+process.on('unhandledRejection', (ex) => {
+    throw ex;
+})
+
+winston.add(new winston.transports.File({filename: 'log/logfile.log',}));
 
 mongoose.connect(process.env.DB_URL)
-    .then(() => console.log('connected...'))
-    .catch(err => console.log("Error", err));
+.then(() => {
+    winston.info('MongoDB is connected...');
+})
+.catch(err => winston.error("Error", err));
 
 app.use(express.json());
 app.use('/api/genres', genres);
@@ -28,4 +42,4 @@ app.use('/api', auth);
 app.use(error)
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server is running on port ${port}`));
+app.listen(port, () => winston.info(`Server is running on port ${port}`));
