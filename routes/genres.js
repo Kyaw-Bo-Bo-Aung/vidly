@@ -2,7 +2,9 @@ const { Genre, validate } = require('../models/Genre');
 const asyncWrapper = require('./../middleware/asyncWrapper');
 const express = require('express');
 const auth = require('./../middleware/auth');
-const isAdmin = require('./../middleware/isAdmin')
+const objectId = require('./../middleware/objectId');
+const isAdmin = require('./../middleware/isAdmin');
+const { default: mongoose } = require('mongoose');
 const router = express.Router();
 
 router.get('/', asyncWrapper(async (req, res) => {
@@ -19,7 +21,7 @@ router.post('/', auth, asyncWrapper(async (req, res) => {
     res.send(newGenre);
 }))
 
-router.put('/:id', auth, asyncWrapper(async (req, res) => {
+router.put('/:id', auth, objectId, asyncWrapper(async (req, res) => {
     const genre = await Genre.findById(req.params.id);
     if(!genre) return res.status(404).send('Genre was not found.');
 
@@ -31,12 +33,12 @@ router.put('/:id', auth, asyncWrapper(async (req, res) => {
     res.send(newGenre);
 }))
 
-router.delete('/:id', auth, isAdmin, asyncWrapper(async (req, res) => {
+router.delete('/:id', auth, isAdmin, objectId, asyncWrapper(async (req, res) => {
     const deletedCount = await Genre.deleteOne({_id: req.params.id})
     res.send(deletedCount);
 }))
 
-router.get('/:id', asyncWrapper(async (req, res) => {
+router.get('/:id', objectId, asyncWrapper(async (req, res) => {
     const genre = await Genre.findById(req.params.id);
     if(!genre) return res.status(404).send('Genre was not found.');
 

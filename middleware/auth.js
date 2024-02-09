@@ -8,7 +8,7 @@ module.exports = function(req, res, next) {
         const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
         req.authUser = data;
     } catch (error) {
-        res.status(403).send('Access denied.');
+        res.status(400).send('Invalid token.');
         res.end();
     }
     next();

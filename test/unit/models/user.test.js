@@ -1,4 +1,6 @@
 const { User } = require('../../../models/User'); 
+const environment = process.env.NODE_ENV || 'development';
+require('dotenv').config({ path: `./.env.${environment}`});
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
