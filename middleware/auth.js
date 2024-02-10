@@ -8,8 +8,7 @@ module.exports = function(req, res, next) {
         const data = jwt.verify(token, process.env.JWT_SECRET_KEY);
         req.authUser = data;
     } catch (error) {
-        res.status(400).send('Invalid token.');
-        res.end();
+        return res.status(400).send('Invalid token.');
     }
     next();
 }

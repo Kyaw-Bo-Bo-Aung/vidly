@@ -4,7 +4,6 @@ const express = require('express');
 const auth = require('./../middleware/auth');
 const objectId = require('./../middleware/objectId');
 const isAdmin = require('./../middleware/isAdmin');
-const { default: mongoose } = require('mongoose');
 const router = express.Router();
 
 router.get('/', asyncWrapper(async (req, res) => {
@@ -16,9 +15,9 @@ router.post('/', auth, asyncWrapper(async (req, res) => {
     const error = validate(req.body);
     if(error) return res.status(400).send(error);
 
-    const genre = new Genre({ name: req.body.name })
-    const newGenre = await genre.save();
-    res.send(newGenre);
+    let genre = new Genre({ name: req.body.name })
+    genre = await genre.save();
+    return res.send(genre);
 }))
 
 router.put('/:id', auth, objectId, asyncWrapper(async (req, res) => {

@@ -13,7 +13,7 @@ describe('auth middleware', () => {
         token = new User().generateJwtToken();
     })
     afterEach(async () => { 
-        server.close();
+        await server.close();
         await Genre.deleteMany({});
     });
 

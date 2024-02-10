@@ -20,7 +20,7 @@ const rentalSchema = mongoose.Schema({
         require: true
 
     },
-    moive: {
+    movie: {
         type: new mongoose.Schema({
             title: {
                 type: String, 
